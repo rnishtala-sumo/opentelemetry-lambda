@@ -9,15 +9,19 @@ receivers:
 exporters:
   debug:
     verbosity: detailed
+  otlphttp:
+    endpoint: "https://your-endpoint.sumologic.net/receiver/v1/otlp/YOUR_TOKEN_HERE"
+    traces_endpoint: "https://your-endpoint.sumologic.net/receiver/v1/otlp/YOUR_TOKEN_HERE/v1/traces"
+    headers:
+      Content-Type: "application/x-protobuf"
+    compression: gzip
+    encoding: proto
 
 service:
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [debug]
+      exporters: [debug, otlphttp]  # Export to both debug (for logs) and Sumo Logic
     metrics:
       receivers: [otlp]
       exporters: [debug]
-  telemetry:
-    metrics:
-      address: localhost:8888
